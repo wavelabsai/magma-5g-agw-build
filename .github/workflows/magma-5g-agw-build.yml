@@ -1,0 +1,28 @@
+name: Magma 5G AGW Build
+
+on:
+  schedule:
+  - cron: "0 */6 * * *"
+  push:
+    branches:
+    - master
+
+jobs:
+  Magma-5G-AGW-Build:
+    runs-on: macos-latest
+    steps:
+    - run: echo "::set-output name=date::$(date +'%m-%d-%Y--%H-%M-%S')"
+      id: date
+    - uses: actions/checkout@v2
+    - run: ./build.sh
+    - uses: "marvinpinto/action-automatic-releases@latest"
+      with:
+        repo_token: "${{ secrets.GITHUB_TOKEN }}"
+        automatic_release_tag: ${{ steps.date.outputs.date }}
+        prerelease: false
+        files: |
+          magma/lte/gateway/magma-packages/*.deb
+    - uses: actions/upload-artifact@v2
+      with:
+        name: magma-packages
+        path: magma/lte/gateway/magma-packages/*.deb
