@@ -11,6 +11,7 @@ git clone https://github.com/magma/magma.git --depth 1
 
 # start building magma
 cd magma/lte/gateway
+sed -i '' 's/1.1.20210928/1.1.20210618/' Vagrantfile
 fab release package:vcs=git
 
 # copy magma packages to github runner
